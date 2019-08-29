@@ -1,0 +1,66 @@
+<html>
+<head>
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+	integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+	crossorigin="anonymous">
+
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"
+	integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+	crossorigin="anonymous"></script>
+<script type="text/javascript">
+	$(document).ready(function() {
+		$.get("http://localhost:8080/students", function(data, status) {
+			var content="";
+data.forEach(function(d){
+	content+="<tr><td id='id'>"+d.id;
+	content+="</td><td id='name'>"+d.name;
+	content+="</td><td id='age'>"+d.age;
+	content+="</td><td id='email'>"+d.email;
+	content+="</td><td><a href='form.html?id="+d.id+"' class='btn btn-success' >EDIT</a>  ";
+	content+="<a href='#' class='btn btn-danger' onclick=remove("+d.id+") >DELETE</a>";
+content+="</td></tr>"
+})
+$("#data").html(content)
+		})
+	})
+	function remove(id){
+		
+			  $.ajax({
+	                url: "http://localhost:8080/students/"+id,
+	                method: "DELETE",
+	                success: function () {
+	                    alert('record has been deleted');
+	                    window.location.replace("/");
+	                },
+	                error: function (error) {
+	                    alert(error);
+	                }
+	            })
+	            
+		}
+	
+</script>
+
+<title>Students</title>
+</head>
+<body>
+	<div class="container">
+		<h1>
+			<i><b>ALL STUDENTS</b></i>
+			<a href="form.html" class="btn btn-primary"><b>NEW STUDENT</b></a>
+		</h1>
+		<table class="table">
+			<thead>
+				<th>ID</th>
+				<th>NAME</th>
+				<th>AGE</th>
+				<th>E-MAIL</th>
+				<th colspan="2">ACTIONS</th>
+			</thead>
+			<tbody id="data">
+			</tbody>
+		</table>
+	</div>
+</body>
+</html>

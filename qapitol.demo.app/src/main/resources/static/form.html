@@ -1,0 +1,76 @@
+<html>
+<head>
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+	integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+	crossorigin="anonymous">	
+	<script
+  src="https://code.jquery.com/jquery-3.4.1.min.js"
+  integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+  <script type="text/javascript">
+  $.urlParam = function (name){
+	  var results = new RegExp('[\?&]'+name +'=([^&#]*)')
+	  .exec(window.location.href);
+	  if(results !==null)
+		  return results[1] || 0;
+	  else
+		  return 0;
+  }
+  $(document)
+  .ready(
+	  function(){
+		  id= $.urlParam("id");
+		  $.get( "http://localhost:8080/students/"+id,function(data){
+			$("#std-name").val(data.name)
+			$("#std-age").val(data.age)
+			$("#std-email").val(data.email)
+			$("#save").val("Update")
+			
+		  })
+  	 		$("#save").click(function(e){
+			e.preventDefault();
+			var data ="";
+			var name= $("#std-name").val();
+			var age= $("#std-age").val();
+			var email= $("#std-email").val();
+			if(name=="" || age=="" || email=="")
+				alert("All fields are mandatory")
+				else if(id!=0){
+				 data={id:id,name:name,age:age,email:email}
+			}else{
+				 data={name:name,age:age,email:email}
+			}
+			$.ajax({
+				type:"post",
+				url: "http://localhost:8080/students/",
+				data:JSON.stringify(data),
+				contentType:"application/json",
+				success:function(data){
+				alert("student Updated Succesfully")
+				window.location.replace("/")
+				}
+	})
+					
+		})
+  })
+  </script>
+</head>
+<body>
+
+	<form autocomplete="off">
+		<div class="container">
+			<h1>
+				<i><b>NEW STUDENTS</b></i> <a href="index.html"
+					class="btn btn-primary"><b>ALL STUDENTS</b></a>
+			</h1>
+			<div class="contents">
+
+					 <label><b><i> NAME </i></b></label><br />
+				<input type="text" id="std-name"><br /> <label><b><i>
+							AGE </i></b></label><br /> <input type="text" id="std-age"><br /> <label><b><i>
+							E-MAIL </i></b></label><br /> <input type="text" id="std-email"><br />
+				<br /> <input type="submit" value="save" id="save" /><br />
+			</div>
+		</div>
+	</form>
+</html>
